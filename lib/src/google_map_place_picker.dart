@@ -582,7 +582,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
                   height: 35,
                   child: RawMaterialButton(
                     shape: CircleBorder(),
-                    fillColor: !(enableTheme ?? true) &&
+                    fillColor: (enableTheme ?? true) &&
                             Theme.of(context).brightness == Brightness.dark
                         ? Colors.black54
                         : Colors.white,
@@ -599,7 +599,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
                   height: 35,
                   child: RawMaterialButton(
                     shape: CircleBorder(),
-                    fillColor: !(enableTheme ?? true) &&
+                    fillColor: (enableTheme ?? true) &&
                             Theme.of(context).brightness == Brightness.dark
                         ? Colors.black54
                         : Colors.white,

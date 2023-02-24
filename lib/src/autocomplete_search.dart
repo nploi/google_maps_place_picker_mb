@@ -118,7 +118,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
       child: RoundedFrame(
         height: widget.height,
         padding: const EdgeInsets.only(right: 10),
-        color: !(widget.enableTheme ?? true) &&
+        color: (widget.enableTheme ?? true) &&
                 Theme.of(context).brightness == Brightness.dark
             ? Colors.black54
             : Colors.white,
@@ -141,7 +141,17 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
     return TextField(
       controller: controller,
       focusNode: focus,
+      style: widget.enableTheme ?? true
+          ? null
+          : Theme.of(context).textTheme.bodyText1?.copyWith(
+                color: Colors.black,
+              ),
       decoration: InputDecoration(
+        hintStyle: widget.enableTheme ?? true
+            ? null
+            : Theme.of(context).textTheme.bodyText1?.copyWith(
+                  color: Colors.black,
+                ),
         hintText: widget.hintText,
         border: InputBorder.none,
         errorBorder: InputBorder.none,
@@ -165,7 +175,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
               child: GestureDetector(
                 child: Icon(
                   Icons.clear,
-                  color: !(widget.enableTheme ?? true) &&
+                  color: (widget.enableTheme ?? true) &&
                           Theme.of(context).brightness == Brightness.dark
                       ? Colors.white
                       : Colors.black,
