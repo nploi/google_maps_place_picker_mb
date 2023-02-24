@@ -58,6 +58,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
     this.zoomGesturesEnabled = true,
     this.zoomControlsEnabled = false,
     this.fullMotion = false,
+    this.enableTheme = true,
   }) : super(key: key);
 
   final LatLng initialTarget;
@@ -104,6 +105,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
   /// Use never scrollable scroll-view with maximum dimensions to prevent unnecessary re-rendering.
   final bool fullMotion;
 
+  final bool? enableTheme;
   _searchByCameraLocation(PlaceProvider provider) async {
     // We don't want to search location again if camera location is changed by zooming in/out.
     if (forceSearchOnZoomChanged == false &&
@@ -580,7 +582,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
                   height: 35,
                   child: RawMaterialButton(
                     shape: CircleBorder(),
-                    fillColor: Theme.of(context).brightness == Brightness.dark
+                    fillColor: !(enableTheme ?? true) &&
+                            Theme.of(context).brightness == Brightness.dark
                         ? Colors.black54
                         : Colors.white,
                     elevation: 4.0,
@@ -596,7 +599,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
                   height: 35,
                   child: RawMaterialButton(
                     shape: CircleBorder(),
-                    fillColor: Theme.of(context).brightness == Brightness.dark
+                    fillColor: !(enableTheme ?? true) &&
+                            Theme.of(context).brightness == Brightness.dark
                         ? Colors.black54
                         : Colors.white,
                     elevation: 4.0,

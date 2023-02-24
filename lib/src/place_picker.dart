@@ -77,6 +77,8 @@ class PlacePicker extends StatefulWidget {
     this.onMapTypeChanged,
     this.zoomGesturesEnabled = true,
     this.zoomControlsEnabled = false,
+    this.enableTheme = true,
+    this.searchInputBuilder,
   }) : super(key: key);
 
   final String apiKey;
@@ -230,6 +232,9 @@ class PlacePicker extends StatefulWidget {
   final bool zoomGesturesEnabled;
   final bool zoomControlsEnabled;
 
+  final bool? enableTheme;
+  final SearchInputBuilder? searchInputBuilder;
+
   @override
   _PlacePickerState createState() => _PlacePickerState();
 }
@@ -370,6 +375,7 @@ class _PlacePickerState extends State<PlacePicker> {
               hintText: widget.hintText,
               searchingText: widget.searchingText,
               debounceMilliseconds: widget.autoCompleteDebounceInMilliseconds,
+              searchInputBuilder: widget.searchInputBuilder,
               onPicked: (prediction) {
                 _pickPrediction(prediction);
               },

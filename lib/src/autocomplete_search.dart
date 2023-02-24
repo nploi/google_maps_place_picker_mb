@@ -9,31 +9,35 @@ import 'package:google_maps_place_picker_mb/src/controllers/autocomplete_search_
 import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
 
+typedef Widget SearchInputBuilder(TextEditingController controller);
+
 class AutoCompleteSearch extends StatefulWidget {
-  const AutoCompleteSearch(
-      {Key? key,
-      required this.sessionToken,
-      required this.onPicked,
-      required this.appBarKey,
-      this.hintText = "Search here",
-      this.searchingText = "Searching...",
-      this.hidden = false,
-      this.height = 40,
-      this.contentPadding = EdgeInsets.zero,
-      this.debounceMilliseconds,
-      this.onSearchFailed,
-      required this.searchBarController,
-      this.autocompleteOffset,
-      this.autocompleteRadius,
-      this.autocompleteLanguage,
-      this.autocompleteComponents,
-      this.autocompleteTypes,
-      this.strictbounds,
-      this.region,
-      this.initialSearchString,
-      this.searchForInitialValue,
-      this.autocompleteOnTrailingWhitespace})
-      : super(key: key);
+  const AutoCompleteSearch({
+    Key? key,
+    required this.sessionToken,
+    required this.onPicked,
+    required this.appBarKey,
+    this.hintText = "Search here",
+    this.searchingText = "Searching...",
+    this.hidden = false,
+    this.height = 40,
+    this.contentPadding = EdgeInsets.zero,
+    this.debounceMilliseconds,
+    this.onSearchFailed,
+    required this.searchBarController,
+    this.autocompleteOffset,
+    this.autocompleteRadius,
+    this.autocompleteLanguage,
+    this.autocompleteComponents,
+    this.autocompleteTypes,
+    this.strictbounds,
+    this.region,
+    this.initialSearchString,
+    this.searchForInitialValue,
+    this.autocompleteOnTrailingWhitespace,
+    this.enableTheme = true,
+    this.searchInputBuilder,
+  }) : super(key: key);
 
   final String? sessionToken;
   final String? hintText;
@@ -56,6 +60,8 @@ class AutoCompleteSearch extends StatefulWidget {
   final String? initialSearchString;
   final bool? searchForInitialValue;
   final bool? autocompleteOnTrailingWhitespace;
+  final bool? enableTheme;
+  final SearchInputBuilder? searchInputBuilder;
 
   @override
   AutoCompleteSearchState createState() => AutoCompleteSearchState();
@@ -98,29 +104,37 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return !widget.hidden
-        ? ChangeNotifierProvider.value(
-            value: provider,
-            child: RoundedFrame(
-              height: widget.height,
-              padding: const EdgeInsets.only(right: 10),
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black54
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              elevation: 4.0,
-              child: Row(
-                children: <Widget>[
-                  SizedBox(width: 10),
-                  Icon(Icons.search),
-                  SizedBox(width: 10),
-                  Expanded(child: _buildSearchTextField()),
-                  _buildTextClearIcon(),
-                ],
-              ),
-            ),
-          )
-        : Container();
+    if (widget.hidden) {
+      return Container();
+    }
+    if (widget.searchInputBuilder != null) {
+      return ChangeNotifierProvider.value(
+        value: provider,
+        child: widget.searchInputBuilder!(controller),
+      );
+    }
+    return ChangeNotifierProvider.value(
+      value: provider,
+      child: RoundedFrame(
+        height: widget.height,
+        padding: const EdgeInsets.only(right: 10),
+        color: !(widget.enableTheme ?? true) &&
+                Theme.of(context).brightness == Brightness.dark
+            ? Colors.black54
+            : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        elevation: 4.0,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 10),
+            Icon(Icons.search),
+            SizedBox(width: 10),
+            Expanded(child: _buildSearchTextField()),
+            _buildTextClearIcon(),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildSearchTextField() {
@@ -151,7 +165,8 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
               child: GestureDetector(
                 child: Icon(
                   Icons.clear,
-                  color: Theme.of(context).brightness == Brightness.dark
+                  color: !(widget.enableTheme ?? true) &&
+                          Theme.of(context).brightness == Brightness.dark
                       ? Colors.white
                       : Colors.black,
                 ),
